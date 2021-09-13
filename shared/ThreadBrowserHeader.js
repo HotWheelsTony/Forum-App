@@ -5,13 +5,12 @@ import CoursePicker from "../routes/CoursePicker";
 
 export default function ThreadBrowserHeader(props) {
     return (
-
         <Header
             elevated={true}
             barStyle="default"
             backgroundColor="#e0e0e0"
             leftComponent={<LeftComponent navigation={props.navigation}/>}
-            centerComponent={<CoursePicker/>}
+            //centerComponent={<CoursePicker/>}
             rightComponent={{
                 icon: "refresh",
                 size: 30,

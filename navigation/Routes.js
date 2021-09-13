@@ -1,16 +1,16 @@
 import React, {useContext, useEffect, useState} from "react";
 import {NavigationContainer} from "@react-navigation/native";
-import HomeScreen from "../screens/Home";
-import {AuthContext} from "./AuthProvider";
+
 import auth from "@react-native-firebase/auth";
-import SettingsScreen from "../screens/Settings";
+import AuthStack from "../routes/AuthStack";
+import {AuthContext} from "../authentication/Auth";
+import DrawerNavigator from "../routes/DrawerNavigator";
 
-const Routes = () => {
-
+export default function Routes() {
     const {user, setUser} = useContext(AuthContext);
     const [initializing, setInitializing] = useState(true);
 
-    const onAuthStateChanged = (user) => {
+    function onAuthStateChanged(user) {
         setUser(user);
         if(setInitializing) setInitializing(false);
     }
@@ -19,13 +19,13 @@ const Routes = () => {
         return auth().onAuthStateChanged(onAuthStateChanged);
     }, [])
 
-    if(initializing) return null;
+    if(initializing) {
+        return null;
+    }
 
     return (
         <NavigationContainer>
-            {user ? <SettingsScreen/> : <HomeScreen/>}
+            {user ? <DrawerNavigator/> : <AuthStack/>}
         </NavigationContainer>
     );
-};
-
-export default Routes;
+}

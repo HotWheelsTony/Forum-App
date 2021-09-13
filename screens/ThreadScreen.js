@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     },
 })
 
-export default function Thread({navigation}) {
+export default function ThreadScreen({navigation}) {
     return (
 
         <View style={styles.ThreadScreenContainer}>
