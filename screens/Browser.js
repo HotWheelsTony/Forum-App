@@ -1,36 +1,16 @@
-import React from 'react';
-import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from "react-native";
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, FlatList, ActivityIndicator} from "react-native";
 import ThreadBrowserHeader from "../shared/ThreadBrowserHeader";
-import auth from "@react-native-firebase/auth";
-
-export default function HomeScreen(props) {
-    return (
-        <View style={styles.HomeScreenContainer}>
-            <ThreadBrowserHeader navigation={props.navigation} />
-            <ScrollView>
-                <Post navigation={props.navigation}/>
-            </ScrollView>
-
-
-        </View>
-    );
-}
-
-function Post(props) {
-    return (
-        <TouchableOpacity onPress={() => props.navigation.navigate("Thread")}>
-            <View style={styles.PostContainer}>
-                <Text style={styles.PostContentStyle}>{auth().currentUser.email}</Text>
-            </View>
-        </TouchableOpacity>
-    );
-}
+import NewPostButton from "../constants/NewPostButton";
+import firestore from "@react-native-firebase/firestore";
+import Post from "../shared/Post";
 
 
 const styles = StyleSheet.create({
     HomeScreenContainer: {
+        flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
+        // alignItems: 'center',
     },
     PostContainer: {
         backgroundColor: "#dde6f2",
@@ -39,11 +19,75 @@ const styles = StyleSheet.create({
     },
     PostContentStyle: {
         fontSize: 20,
-
     },
     NewPostButtonContainer: {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'flex-end'
+        // flex: 1,
+        // flexDirection: 'column',
+        // justifyContent: 'flex-end'
+        justifyContent: "center",
+        alignItems: "flex-end",
+        padding: 30,
+        // position: 'absolute',
+        // bottom: 20,
+        // right: 20,
     }
 })
+
+export default function HomeScreen(props) {
+    const [loading, setLoading] = useState(true);
+    const [posts, setPosts] = useState([]);
+
+    useEffect(() => {
+        const subscriber = firestore()
+            .collection("posts")
+            .onSnapshot(snapshot => {
+                const posts = [];
+                snapshot.forEach(doc => {
+                    const {
+                        content,
+                        posterUsername,
+                        timestamp,
+                        replies,
+                    } = doc.data();
+                    posts.push({
+                        id: doc.id,
+                        content: content,
+                        posterUsername: posterUsername,
+                        timestamp: timestamp,
+                        replies,
+                    });
+                });
+                setPosts(posts);
+                setLoading(false);
+            });
+        //return () => subscriber();
+    }, []);
+
+    if (loading) {
+        return <ActivityIndicator/>;
+    }
+
+    return (
+        <View style={styles.HomeScreenContainer}>
+            <ThreadBrowserHeader navigation={props.navigation}/>
+            <FlatList data={posts}
+                      renderItem={({item}) => (
+                          <TouchableOpacity activeOpacity={0.7}
+                                            onPress={() => props.navigation.navigate("Thread", item)}
+                          >
+                              <Post navigation={props.navigation}
+                                    item={item}
+                              />
+                          </TouchableOpacity>
+                      )}
+                      keyExtractor={(item) => item.id}
+                      showsVerticalScrollIndicator={false}
+            />
+
+            <View style={styles.NewPostButtonContainer}>
+                <NewPostButton navigation={props.navigation}/>
+            </View>
+
+        </View>
+    );
+}

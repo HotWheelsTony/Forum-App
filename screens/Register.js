@@ -2,7 +2,7 @@ import React, {useContext, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from "react-native";
 import {AuthContext} from "../authentication/Auth";
 import {InputField} from "./Login";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+
 
 const styles = StyleSheet.create({
     RegisterScreenContainer: {
@@ -33,10 +33,22 @@ const styles = StyleSheet.create({
         fontFamily: "Roboto-Medium",
         fontSize: 45,
     },
-    SignupButtonContainer: {
-
-    }
-
+    SignupContainer: {
+        flexDirection: "row",
+        padding: 5,
+        margin: 10,
+        width: 180,
+        backgroundColor: "#e0e0e0",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 10,
+    },
+    SignupText: {
+        padding: 10,
+        fontSize: 20,
+        color: "black",
+        fontFamily: 'Roboto-Regular',
+    },
 })
 
 export default function RegisterScreen({navigation}) {
@@ -89,15 +101,15 @@ export default function RegisterScreen({navigation}) {
                     secureTextEntry={true}
                 />
             </View>
-            <TouchableOpacity style={styles.SignupButtonContainer}
-                              onPress={() => login(email, password)}>
-                <Text style={(!email || !password) ? styles.LoginTextInActive : styles.LoginTextActive}>
-                    Login
+            <TouchableOpacity style={styles.SignupContainer}
+                              onPress={() => {
+                                  if (username && email && password && (password === confirmPassword)) {
+                                      register(username, email, password)
+                                  }
+                              }}>
+                <Text style={styles.SignupText}>
+                    Create account
                 </Text>
-                <MaterialIcons name="login"
-                               size={30}
-                               color={(!email || !password) ? "rgba(0,0,0,0.5)" : "black"}
-                />
 
             </TouchableOpacity>
 

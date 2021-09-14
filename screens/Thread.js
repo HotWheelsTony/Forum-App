@@ -10,13 +10,14 @@ const styles = StyleSheet.create({
     },
 })
 
-export default function ThreadScreen({navigation}) {
+export default function Thread(props) {
     return (
 
         <View style={styles.ThreadScreenContainer}>
-            <ThreadHeader navigation={navigation}/>
+            <ThreadHeader navigation={props.navigation}/>
             <ScrollView>
-                <Post navigation={navigation}/>
+                <Post navigation={props.navigation}
+                      item={props.route.params}/>
             </ScrollView>
 
         </View>

@@ -4,11 +4,6 @@ import {Divider, Icon} from "react-native-elements";
 
 
 const styles = StyleSheet.create({
-    ThreadScreenContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
     PostContainer: {
         backgroundColor: '#dde6f2',
         borderRadius: 20,
@@ -39,27 +34,27 @@ const styles = StyleSheet.create({
 export default function Post(props) {
     return (
         <View style={styles.PostContainer}>
-            <PostHeader/>
+            <PostHeader timestamp={props.item.timestamp}
+                        username={props.item.posterUsername}
+            />
             <Divider color="black"/>
             <Text style={styles.PostTextStyle}>
-                Hi guys, is anyone else panicking about the assignment due on Thursday? I'm only just getting
-                started and I can't bloody think of any good ideas for an app so I hope I come up with something
-                soon! Anyway, what are all you guys doing for yours? Maybe I need some inspiration.
+                {props.item.content}
             </Text>
         </View>
     );
 }
 
-function PostHeader() {
+function PostHeader(props) {
     return (
         <View>
             <View style={styles.PostHeaderContainer}>
                 <Text style={styles.PostHeaderTextStyle}>
-                    Poster Name
+                    {props.username}
                 </Text>
                 <SeparatorDot/>
                 <Text style={styles.PostInfoTextStyle}>
-                    July 27, 4:20PM
+                    {props.timestamp}
                 </Text>
                 <SeparatorDot/>
                 <Text style={styles.PostInfoTextStyle}>

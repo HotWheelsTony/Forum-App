@@ -11,12 +11,7 @@ const Drawer = createDrawerNavigator()
 
 const styles = StyleSheet.create({
     DrawerContainer: {
-        fontFamily: "Roboto-Regular",
-        color: 'black',
-        fontSize: 25,
         flex: 1,
-        //flexDirection: "column",
-        //justifyContent: "space-between",
     },
     DrawerItem: {
         fontSize: 20,
@@ -40,6 +35,16 @@ const styles = StyleSheet.create({
         color: "black",
         fontSize: 20,
         justifyContent: "flex-end",
+    },
+    Username: {
+        fontFamily: "Roboto-Regular",
+        color: 'black',
+        fontSize: 20,
+    },
+    UserEmail: {
+        fontFamily: "Roboto-Regular",
+        color: 'black',
+        fontSize: 15,
     }
 });
 
@@ -77,13 +82,14 @@ export function DrawerHeader(props) {
     return (
         <View>
             <TouchableOpacity style={styles.DrawerHeader}
+                              activeOpacity={0.7}
                               onPress={() => props.navigation.navigate("Account")}>
                 <View>
-                    <Text>
-                        name {auth().currentUser.displayName}
+                    <Text style={styles.Username}>
+                        {auth().currentUser.displayName}
                     </Text>
-                    <Text>
-                        email {auth().currentUser.email}
+                    <Text style={styles.UserEmail}>
+                        {auth().currentUser.email}
                     </Text>
                 </View>
                 <Image source={{
