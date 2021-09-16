@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useState} from "react";
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Divider, Icon} from "react-native-elements";
+import {Menu, MenuItem} from "react-native-material-menu";
 
 
 const styles = StyleSheet.create({
@@ -10,6 +11,7 @@ const styles = StyleSheet.create({
         margin: 5,
         paddingTop: 6,
         padding: 10,
+        elevation: 2,
     },
     PostTextStyle: {
         fontFamily: 'Roboto-Regular',
@@ -32,10 +34,13 @@ const styles = StyleSheet.create({
 
 
 export default function Post(props) {
+    const numReplies = props.item.replies ? 1 : 0;
     return (
         <View style={styles.PostContainer}>
-            <PostHeader timestamp={props.item.timestamp}
+            <PostHeader displayTimestamp={props.item.displayTimestamp}
                         username={props.item.posterUsername}
+                        numReplies={numReplies}
+                        navigation={props.navigation}
             />
             <Divider color="black"/>
             <Text style={styles.PostTextStyle}>
@@ -54,28 +59,51 @@ function PostHeader(props) {
                 </Text>
                 <SeparatorDot/>
                 <Text style={styles.PostInfoTextStyle}>
-                    {props.timestamp}
+                    {props.displayTimestamp}
                 </Text>
                 <SeparatorDot/>
                 <Text style={styles.PostInfoTextStyle}>
-                    0 Replies
+                    {props.numReplies} Replies
                 </Text>
                 <View style={{
                     justifyContent: "flex-end",
                     marginLeft: "auto",
                 }}>
-                    <Icon
-                        name="more-vert"
-                        size={20}
-                        onPress={() => alert("Not implemented!")}
-                    />
+                    <PostOptions navigation={props.navigation}/>
+
+                    {/*<Icon*/}
+                    {/*    name="more-vert"*/}
+                    {/*    size={20}*/}
+                    {/*    onPress={() => alert("Not implemented!")}*/}
+                    {/*/>*/}
                 </View>
             </View>
 
         </View>
+    );
+}
 
-    )
-        ;
+function PostOptions(props) {
+    const [visible, setVisible] = useState(false);
+    const hideMenu = () => setVisible(false);
+    const showMenu = () => setVisible(true);
+
+    return (
+        <Menu
+            visible={visible}
+            anchor={<Icon
+                name="more-vert"
+                size={20}
+                onPress={showMenu}
+            />}
+            onRequestClose={hideMenu}
+        >
+            <MenuItem onPress={hideMenu}>Reply</MenuItem>
+            <MenuItem onPress={hideMenu}>Report</MenuItem>
+            {/*<MenuDivider/>*/}
+            <MenuItem onPress={hideMenu}>Delete</MenuItem>
+        </Menu>
+    );
 }
 
 function SeparatorDot() {

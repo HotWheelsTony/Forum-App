@@ -10,12 +10,8 @@ export default function ThreadBrowserHeader(props) {
             barStyle="default"
             backgroundColor="#e0e0e0"
             leftComponent={<LeftComponent navigation={props.navigation}/>}
+            rightComponent={props.rightComponent}
             //centerComponent={<CoursePicker/>}
-            rightComponent={{
-                icon: "refresh",
-                size: 30,
-                onPress: () => alert("Not implemented!"),
-            }}
         />
     );
 }

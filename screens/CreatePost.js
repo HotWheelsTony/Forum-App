@@ -62,15 +62,18 @@ async function Submit(content) {
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     ];
     const date = new Date();
-    const timestamp = monthNames[parseInt(date.getMonth())] + " " + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
+    const displayTimestamp = monthNames[parseInt(date.getMonth())] + " " + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
 
     await firestore()
         .collection("posts")
         .add({
             posterUsername: auth().currentUser.displayName,
             content: content,
-            timestamp: timestamp,
+            displayTimestamp: displayTimestamp,
+            timestamp: firestore.Timestamp.fromDate(date).seconds,
         }).then(() => {
             console.log("Post created!")
+        }).catch(error => {
+            console.log("Error creating post " + error)
         })
 }

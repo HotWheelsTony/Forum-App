@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
 })
 
 
-export default function SignInScreen({navigation}) {
+export default function LoginScreen({navigation}) {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState("");
     const {login} = useContext(AuthContext);

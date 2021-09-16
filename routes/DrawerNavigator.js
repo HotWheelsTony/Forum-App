@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {createDrawerNavigator, DrawerContentScrollView, DrawerItem} from "@react-navigation/drawer";
 import auth from "@react-native-firebase/auth";
-import {Text, View, StyleSheet, Image, TouchableOpacity} from "react-native";
+import {Text, View, StyleSheet, Image, TouchableOpacity, FlatList} from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import {Divider} from "react-native-elements";
 import AppStack from "./AppStack";
+import {GetPost} from "../model/Database";
+import firestore from "@react-native-firebase/firestore";
 
 
 const Drawer = createDrawerNavigator()
@@ -26,7 +28,7 @@ const styles = StyleSheet.create({
     DrawerHeader: {
         flexDirection: "row",
         padding: 20,
-        marginTop: 10,
+        marginTop: 30,
         alignItems: "center",
         justifyContent: "space-between",
         backgroundColor: "#e0e0e0",
@@ -45,13 +47,21 @@ const styles = StyleSheet.create({
         fontFamily: "Roboto-Regular",
         color: 'black',
         fontSize: 15,
-    }
+    },
+    BookmarkContainer: {
+        padding: 10,
+    },
+    BookmarkText: {
+        fontFamily: "Roboto-Regular",
+        color: 'black',
+        fontSize: 20,
+    },
 });
 
 
 export default function DrawerNavigator() {
     return (
-        <Drawer.Navigator drawerContent={(props) => <CustomDrawerContent{...props}/>}
+        <Drawer.Navigator drawerContent={(props) => <CustomDrawerContent {...props}/>}
                           screenOptions={{
                               headerShown: false,
                               initialRouteName: "ThreadBrowser"
@@ -61,22 +71,78 @@ export default function DrawerNavigator() {
     );
 }
 
-
 function CustomDrawerContent(props) {
+    const [bookmarks, setBookmarks] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [deleted, setDeleted] = useState(false);
+
+    const onRefresh = () => {
+        setLoading(true);
+        getBookmarks().then(() => {
+            console.log("Posts fetched in onRefresh")
+        });
+    }
+
+
+    const getBookmarks = async () => {
+        setLoading(true);
+        console.log("Fetching bookmarks...")
+        try {
+            const list = [];
+            await firestore()
+                .collection('users')
+                .doc(auth().currentUser.uid)
+                .collection("bookmarks")
+                .orderBy("timestamp", "desc")
+                .get()
+                .then((snapshot) => {
+                    snapshot.forEach((doc) => {
+                        const {
+                            content,
+                            timestamp,
+                        } = doc.data();
+                        list.push({
+                            id: doc.id,
+                            content: content,
+                            timestamp: timestamp,
+                        });
+                    });
+                });
+            setBookmarks(list);
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        console.log("use effect called: " + loading)
+        getBookmarks().then(() => {
+            console.log("Bookmarks fetched")
+        });
+    }, [loading]);
+
+
+
     return (
         <View style={styles.DrawerContainer}>
-
-            <DrawerContentScrollView {...props}>
-                <DrawerHeader navigation={props.navigation}/>
-
-            </DrawerContentScrollView>
-
+            <DrawerHeader navigation={props.navigation}/>
+            <FlatList data={bookmarks}
+                      extraData={loading}
+                      keyExtractor={(item) => item.id}
+                      showsVerticalScrollIndicator={true}
+                      renderItem={({item}) => (
+                          <TouchableOpacity activeOpacity={0.8}
+                                            onPress={() => props.navigation.navigate("Thread", GetPost(item))}
+                          >
+                              <BookmarkEntry item={item}/>
+                          </TouchableOpacity>
+                      )}
+            />
             <DrawerFooter navigation={props.navigation}/>
-
         </View>
     );
 }
-
 
 export function DrawerHeader(props) {
     return (
@@ -105,6 +171,13 @@ export function DrawerHeader(props) {
     );
 }
 
+function BookmarkEntry({item}) {
+    return (
+        <Text style={styles.DrawerItem}>
+            {item.content.length > 20 ? item.content.substring(0, 20) + "..." : item.content}
+        </Text>
+    );
+}
 
 function DrawerFooter(props) {
     return (
@@ -116,7 +189,7 @@ function DrawerFooter(props) {
                         icon={() => <MaterialIcons color={'black'}
                                                    size={30}
                                                    name={'settings'}
-                                    />
+                        />
                         }
             />
         </View>
