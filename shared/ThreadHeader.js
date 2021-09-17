@@ -1,10 +1,9 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {StyleSheet, TouchableOpacity, View} from "react-native";
 import {Header, Icon} from "react-native-elements";
 import BackButton from "./BackButton";
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
-import {BookmarkThread} from "../model/Database";
 
 const styles = StyleSheet.create({
     headerText: {
@@ -17,6 +16,53 @@ const styles = StyleSheet.create({
 });
 
 export default function ThreadHeader(props) {
+    const [bookmarked, setBookmarked] = useState(props.isBookmarked);
+
+    const checkBookmarks = async () => {
+        await firestore()
+            .collection("users")
+            .doc(auth().currentUser.uid)
+            .collection("bookmarks")
+            .doc(props.postId)
+            .get()
+            .then(documentSnapshot => {
+                if (documentSnapshot.exists) {
+                    setBookmarked(true);
+                } else {
+                    setBookmarked(false);
+                }
+            });
+    }
+
+    const removeBookmark = async () => {
+        firestore()
+            .collection("users")
+            .doc(auth().currentUser.uid)
+            .collection("bookmarks")
+            .doc(props.postId)
+            .delete().then(() => console.log("Bookmark deleted"));
+        setBookmarked(false);
+    }
+
+    const addBookmark = async () => {
+        firestore()
+            .collection("users")
+            .doc(auth().currentUser.uid)
+            .collection("bookmarks")
+            .doc(props.postId)
+            .set({
+                content: props.item.content,
+                timestamp: firestore.Timestamp.fromDate(new Date()).seconds,
+            }).then(() => console.log("Thread bookmarked"));
+    }
+
+    useEffect(() => {
+        checkBookmarks().then(() => {
+            console.log("Checked bookmarks for post: " + props.postId)
+        });
+    }, [bookmarked, props.postId]);
+
+    console.log("Thread header: " + bookmarked);
     return (
         <Header
             elevated={true}
@@ -27,43 +73,31 @@ export default function ThreadHeader(props) {
             }
             centerComponent={{
                 style: styles.headerText,
-                text: "Thread",
-
+                text: props.item.content.length > 20
+                    ? props.item.content.substring(0, 20) + "..."
+                    : props.item.content,
             }}
             rightComponent={
-                <RightHeaderComponent navigation={props.navigation}
-                                      item={props.item}/>
+                <TouchableOpacity onPress={() => {
+                    setBookmarked(!bookmarked);
+                    if (bookmarked) {
+                        removeBookmark().then(() => setBookmarked(false));
+                    } else {
+                        addBookmark().then(() => setBookmarked(true));
+                    }
+                }}>
+                    <Icon name={bookmarked ? "bookmark" : "bookmark-outline"}
+                          color="black"
+                          size={30}
+                          style={{
+                              marginRight: 10,
+                          }}/>
+                </TouchableOpacity>
             }
         />
     );
-}
 
-function RightHeaderComponent(props) {
-    return (
-        <View style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-        }}>
-            <TouchableOpacity onPress={() => {
-                BookmarkThread(props.item);
-                props.navigation.openDrawer();
-            }}>
-                <Icon name="bookmark-outline"
-                      color="black"
-                      size={30}
-                      style={{
-                          marginRight: 10,
-                      }}
-                />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => alert("Not implemented!")}>
-                <Icon name="refresh"
-                      color="black"
-                      size={30}
-                />
-            </TouchableOpacity>
-        </View>
-    );
+
 }
 
 

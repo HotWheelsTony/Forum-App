@@ -10,7 +10,6 @@ import firestore from "@react-native-firebase/firestore";
 const styles = StyleSheet.create({
     HomeScreenContainer: {
         flex: 1,
-        alignItems: 'center',
     },
     NewPostButtonContainer: {
         flex: 1,
@@ -79,7 +78,7 @@ export default function HomeScreen(props) {
                       ListFooterComponent={<EOFFooter option="posts"/>}
                       renderItem={({item}) => (
                           <TouchableOpacity activeOpacity={0.8}
-                                            onPress={() => props.navigation.navigate("Thread", item)}
+                                            onPress={() => props.navigation.navigate("Thread", item.id)}
                           >
                               <Post navigation={props.navigation}
                                     item={item}

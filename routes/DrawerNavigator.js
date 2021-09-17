@@ -5,7 +5,6 @@ import {Text, View, StyleSheet, Image, TouchableOpacity, FlatList} from "react-n
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import {Divider} from "react-native-elements";
 import AppStack from "./AppStack";
-import {GetPost} from "../model/Database";
 import firestore from "@react-native-firebase/firestore";
 
 
@@ -71,69 +70,47 @@ export default function DrawerNavigator() {
     );
 }
 
+let bookmarks = [];
+
+firestore()
+    .collection("users")
+    .doc(auth().currentUser.uid)
+    .collection("bookmarks")
+    .orderBy("timestamp", "desc")
+    .onSnapshot(onResult, onError);
+
+function onResult(QuerySnapshot) {
+    const list = [];
+    QuerySnapshot.forEach((doc) => {
+        const {
+            content,
+            timestamp,
+        } = doc.data();
+        list.push({
+            id: doc.id,
+            content: content,
+            timestamp: timestamp,
+        });
+    });
+    bookmarks = list;
+    console.log("Fetched bookmarks");
+}
+
+function onError() {
+    console.log("Error fetching bookmarks")
+}
+
 function CustomDrawerContent(props) {
-    const [bookmarks, setBookmarks] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [deleted, setDeleted] = useState(false);
-
-    const onRefresh = () => {
-        setLoading(true);
-        getBookmarks().then(() => {
-            console.log("Posts fetched in onRefresh")
-        });
-    }
-
-
-    const getBookmarks = async () => {
-        setLoading(true);
-        console.log("Fetching bookmarks...")
-        try {
-            const list = [];
-            await firestore()
-                .collection('users')
-                .doc(auth().currentUser.uid)
-                .collection("bookmarks")
-                .orderBy("timestamp", "desc")
-                .get()
-                .then((snapshot) => {
-                    snapshot.forEach((doc) => {
-                        const {
-                            content,
-                            timestamp,
-                        } = doc.data();
-                        list.push({
-                            id: doc.id,
-                            content: content,
-                            timestamp: timestamp,
-                        });
-                    });
-                });
-            setBookmarks(list);
-            setLoading(false);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    useEffect(() => {
-        console.log("use effect called: " + loading)
-        getBookmarks().then(() => {
-            console.log("Bookmarks fetched")
-        });
-    }, [loading]);
-
-
-
     return (
         <View style={styles.DrawerContainer}>
             <DrawerHeader navigation={props.navigation}/>
             <FlatList data={bookmarks}
-                      extraData={loading}
+                      extraData={bookmarks}
                       keyExtractor={(item) => item.id}
                       showsVerticalScrollIndicator={true}
                       renderItem={({item}) => (
                           <TouchableOpacity activeOpacity={0.8}
-                                            onPress={() => props.navigation.navigate("Thread", GetPost(item))}
+                                            onPress={() => props.navigation.navigate("Thread", item.id)}
                           >
                               <BookmarkEntry item={item}/>
                           </TouchableOpacity>
