@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {View, Text, StyleSheet, Button, TouchableOpacity} from "react-native";
 import CustomHeader from "../shared/CustomHeader";
-import {AuthContext} from "../authentication/Auth";
+import {AuthContext} from "../../Controller/Auth";
 import {Divider} from "react-native-elements/dist/divider/Divider";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 

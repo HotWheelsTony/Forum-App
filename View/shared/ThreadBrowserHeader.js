@@ -1,7 +1,7 @@
 import React from "react";
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Header, Icon} from "react-native-elements";
-import CoursePicker from "../routes/CoursePicker";
+import CoursePicker from "../navigation/CoursePicker";
 
 export default function ThreadBrowserHeader(props) {
     return (

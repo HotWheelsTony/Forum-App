@@ -1,7 +1,9 @@
-import React, {useState} from "react";
-import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import React, {useEffect, useState} from "react";
+import {StyleSheet, Text, View} from "react-native";
 import {Divider, Icon} from "react-native-elements";
 import {Menu, MenuItem} from "react-native-material-menu";
+import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
 
 
 const styles = StyleSheet.create({
@@ -20,10 +22,9 @@ const styles = StyleSheet.create({
     PostHeaderContainer: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "flex-start",
     },
     PostHeaderTextStyle: {
-        fontSize: 15,
+        fontSize: 16,
         fontFamily: "Roboto-Medium"
     },
     PostInfoTextStyle: {
@@ -34,13 +35,30 @@ const styles = StyleSheet.create({
 
 
 export default function Post(props) {
-    const numReplies = props.item.replies ? 1 : 0;
+    const [numReplies, setNumReplies] = useState(0);
+
+    const replies = async () => {
+        await firestore()
+            .collection("posts")
+            .doc(props.postId)
+            .collection("replies")
+            .get()
+            .then(colRef => {
+                setNumReplies(colRef.size - 1);
+            });
+    }
+
+    useEffect(() => {
+        replies().then(() => {});
+    }, []);
+
     return (
         <View style={styles.PostContainer}>
             <PostHeader displayTimestamp={props.item.displayTimestamp}
                         username={props.item.posterUsername}
                         numReplies={numReplies}
                         navigation={props.navigation}
+                        postId={props.postId}
             />
             <Divider color="black"/>
             <Text style={styles.PostTextStyle}>
@@ -52,33 +70,26 @@ export default function Post(props) {
 
 function PostHeader(props) {
     return (
-        <View>
-            <View style={styles.PostHeaderContainer}>
-                <Text style={styles.PostHeaderTextStyle}>
-                    {props.username}
-                </Text>
-                <SeparatorDot/>
-                <Text style={styles.PostInfoTextStyle}>
-                    {props.displayTimestamp}
-                </Text>
-                <SeparatorDot/>
-                <Text style={styles.PostInfoTextStyle}>
-                    {props.numReplies} Replies
-                </Text>
-                <View style={{
-                    justifyContent: "flex-end",
-                    marginLeft: "auto",
-                }}>
-                    <PostOptions navigation={props.navigation}/>
-
-                    {/*<Icon*/}
-                    {/*    name="more-vert"*/}
-                    {/*    size={20}*/}
-                    {/*    onPress={() => alert("Not implemented!")}*/}
-                    {/*/>*/}
-                </View>
+        <View style={styles.PostHeaderContainer}>
+            <Text style={styles.PostHeaderTextStyle}>
+                {props.username}
+            </Text>
+            <SeparatorDot/>
+            <Text style={styles.PostInfoTextStyle}>
+                {props.displayTimestamp}
+            </Text>
+            <SeparatorDot/>
+            <Text style={styles.PostInfoTextStyle}>
+                {props.numReplies} Replies
+            </Text>
+            <View style={{
+                justifyContent: "flex-end",
+                marginLeft: "auto",
+            }}>
+                <PostOptions navigation={props.navigation}
+                             postId={props.postId}
+                />
             </View>
-
         </View>
     );
 }
@@ -98,10 +109,16 @@ function PostOptions(props) {
             />}
             onRequestClose={hideMenu}
         >
-            <MenuItem onPress={hideMenu}>Reply</MenuItem>
+            <MenuItem onPress={() => {
+                hideMenu();
+                props.navigation.navigate("Reply", props.postId);
+            }}>
+                Reply
+            </MenuItem>
+
             <MenuItem onPress={hideMenu}>Report</MenuItem>
-            {/*<MenuDivider/>*/}
             <MenuItem onPress={hideMenu}>Delete</MenuItem>
+
         </Menu>
     );
 }
@@ -120,6 +137,7 @@ function SeparatorDot() {
         />
     );
 }
+
 
 
 

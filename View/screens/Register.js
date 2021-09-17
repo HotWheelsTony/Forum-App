@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from "react-native";
-import {AuthContext} from "../authentication/Auth";
+import {AuthContext} from "../../Controller/Auth";
 import {InputField} from "./Login";
 
 

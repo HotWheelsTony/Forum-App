@@ -2,9 +2,9 @@ import React, {useContext, useEffect, useState} from "react";
 import {NavigationContainer} from "@react-navigation/native";
 
 import auth from "@react-native-firebase/auth";
-import AuthStack from "../routes/AuthStack";
-import {AuthContext} from "../authentication/Auth";
-import DrawerNavigator from "../routes/DrawerNavigator";
+import AuthStack from "./AuthStack";
+import {AuthContext} from "../../Controller/Auth";
+import DrawerNavigator from "./DrawerNavigator";
 
 export default function Routes() {
     const {user, setUser} = useContext(AuthContext);

@@ -4,6 +4,7 @@ import {Header, Icon} from "react-native-elements";
 import BackButton from "./BackButton";
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
+import {addBookmark, removeBookmark} from "../../Controller/Bookmarking";
 
 const styles = StyleSheet.create({
     headerText: {
@@ -16,7 +17,7 @@ const styles = StyleSheet.create({
 });
 
 export default function ThreadHeader(props) {
-    const [bookmarked, setBookmarked] = useState(props.isBookmarked);
+    const [bookmarked, setBookmarked] = useState();
 
     const checkBookmarks = async () => {
         await firestore()
@@ -34,35 +35,12 @@ export default function ThreadHeader(props) {
             });
     }
 
-    const removeBookmark = async () => {
-        firestore()
-            .collection("users")
-            .doc(auth().currentUser.uid)
-            .collection("bookmarks")
-            .doc(props.postId)
-            .delete().then(() => console.log("Bookmark deleted"));
-        setBookmarked(false);
-    }
-
-    const addBookmark = async () => {
-        firestore()
-            .collection("users")
-            .doc(auth().currentUser.uid)
-            .collection("bookmarks")
-            .doc(props.postId)
-            .set({
-                content: props.item.content,
-                timestamp: firestore.Timestamp.fromDate(new Date()).seconds,
-            }).then(() => console.log("Thread bookmarked"));
-    }
-
     useEffect(() => {
         checkBookmarks().then(() => {
             console.log("Checked bookmarks for post: " + props.postId)
         });
     }, [bookmarked, props.postId]);
 
-    console.log("Thread header: " + bookmarked);
     return (
         <Header
             elevated={true}
@@ -81,9 +59,9 @@ export default function ThreadHeader(props) {
                 <TouchableOpacity onPress={() => {
                     setBookmarked(!bookmarked);
                     if (bookmarked) {
-                        removeBookmark().then(() => setBookmarked(false));
+                        removeBookmark(props.postId).then(() => setBookmarked(false));
                     } else {
-                        addBookmark().then(() => setBookmarked(true));
+                        addBookmark(props.postId, props.item.content).then(() => setBookmarked(true));
                     }
                 }}>
                     <Icon name={bookmarked ? "bookmark" : "bookmark-outline"}
@@ -96,8 +74,6 @@ export default function ThreadHeader(props) {
             }
         />
     );
-
-
 }
 
 

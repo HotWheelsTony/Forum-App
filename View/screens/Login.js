@@ -1,6 +1,6 @@
 import React, {useContext, useState} from "react";
 import {View, Text, StyleSheet, TextInput, TouchableOpacity} from "react-native";
-import {AuthContext} from "../authentication/Auth";
+import {AuthContext} from "../../Controller/Auth";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 const styles = StyleSheet.create({

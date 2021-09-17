@@ -1,6 +1,6 @@
 import React from "react";
-import AuthProvider from "./authentication/Auth";
-import Routes from "./navigation/Routes";
+import AuthProvider from "./Controller/Auth";
+import Routes from "./View/navigation/Routes";
 
 export default function App() {
     return (

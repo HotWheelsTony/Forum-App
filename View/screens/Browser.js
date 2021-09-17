@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, FlatList} from "react-native";
 import ThreadBrowserHeader from "../shared/ThreadBrowserHeader";
-import NewPostButton from "../constants/NewPostButton";
+import NewPostButton from "../shared/NewPostButton";
 import Post from "../shared/Post";
 import EOFFooter from "../shared/EOFFooter";
 import firestore from "@react-native-firebase/firestore";
+import {GetPosts} from "../../Controller/Fetching";
 
 
 const styles = StyleSheet.create({
@@ -23,6 +24,10 @@ export default function HomeScreen(props) {
     const [posts, setPosts] = useState(null);
     const [loading, setLoading] = useState(true);
     const [deleted, setDeleted] = useState(false);
+
+    // (async () => {
+    //     setPosts(await GetPosts());
+    // })()
 
     const onRefresh = () => {
         setLoading(true);
@@ -65,8 +70,7 @@ export default function HomeScreen(props) {
     };
 
     useEffect(() => {
-        getPosts().then(() => {
-        });
+        getPosts().then(() => {});
     }, []);
 
     return (
@@ -82,7 +86,7 @@ export default function HomeScreen(props) {
                           >
                               <Post navigation={props.navigation}
                                     item={item}
-                              />
+                                    postId={item.id}/>
                           </TouchableOpacity>
                       )}
                       keyExtractor={(item) => item.id}
