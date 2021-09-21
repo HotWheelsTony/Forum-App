@@ -3,8 +3,6 @@ import {StyleSheet, Text, View} from "react-native";
 import {Divider, Icon} from "react-native-elements";
 import {Menu, MenuItem} from "react-native-material-menu";
 import firestore from "@react-native-firebase/firestore";
-import auth from "@react-native-firebase/auth";
-
 
 const styles = StyleSheet.create({
     PostContainer: {
@@ -34,6 +32,10 @@ const styles = StyleSheet.create({
 });
 
 
+/*
+Component for displaying a post, props contains
+the post id of the post to be rendered and the post item
+ */
 export default function Post(props) {
     const [numReplies, setNumReplies] = useState(0);
 
@@ -68,6 +70,10 @@ export default function Post(props) {
     );
 }
 
+/*
+Component for displaying the header of the post,
+including poster name, timestamp, and number of replies
+ */
 function PostHeader(props) {
     return (
         <View style={styles.PostHeaderContainer}>
@@ -94,6 +100,10 @@ function PostHeader(props) {
     );
 }
 
+/*
+Display the three dots for the post options, e.g. replying
+on the right hand side of the post header
+ */
 function PostOptions(props) {
     const [visible, setVisible] = useState(false);
     const hideMenu = () => setVisible(false);
@@ -123,6 +133,10 @@ function PostOptions(props) {
     );
 }
 
+/*
+Simple dot component which separates the different
+parts of the post header
+ */
 function SeparatorDot() {
     return (
         <Icon

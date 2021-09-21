@@ -7,8 +7,7 @@ import {submitReply} from "../../Controller/Posting";
 
 const styles = StyleSheet.create({
     CreatePostScreenContainer: {
-        //justifyContent: 'center',
-        //alignItems: 'center',
+
     },
     InputContainer: {
         padding: 10,
@@ -24,6 +23,10 @@ export default function CreateReplyScreen(props) {
     const [content, setContent] = useState();
     const postId = props.route.params;
 
+    /*
+    Create reply screen, displays a simple text input field
+    for user to enter text, then submit
+    */
     return (
         <View style={styles.CreatePostScreenContainer}>
             <CustomHeader title="Reply" navigation={props.navigation}/>

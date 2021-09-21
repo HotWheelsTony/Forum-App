@@ -2,6 +2,11 @@ import {TouchableOpacity, View} from "react-native";
 import {Icon} from "react-native-elements";
 import React from "react";
 
+/*
+A simple back button component which
+is used by multiple screens, its passed a navigation
+prop which it uses to navigate to the previous screen in the stack
+ */
 export default function BackButton(props) {
     return (
         <View style={{

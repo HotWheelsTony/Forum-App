@@ -19,6 +19,10 @@ const styles = StyleSheet.create({
 })
 
 export default function SettingsScreen(props) {
+    /*
+    Simple settings screen, with links to general
+    and account settings
+    */
     return (
         <View style={styles.SettingsScreenContainer}>
             <CustomHeader title="Settings" navigation={props.navigation}/>

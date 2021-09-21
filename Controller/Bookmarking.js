@@ -1,6 +1,10 @@
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 
+/*
+Remove the bookmark with the given postId
+from the current users bookmarks collection
+ */
 export async function removeBookmark(postId) {
     await firestore()
         .collection("users")
@@ -10,7 +14,11 @@ export async function removeBookmark(postId) {
         .delete().then(() => console.log("Bookmark deleted"));
 }
 
-export async function addBookmark (postId, content) {
+/*
+Add a bookmark with teh given postId and content
+to the current users bookmarks collection
+ */
+export async function addBookmark(postId, content) {
     console.log(postId)
     await firestore()
         .collection("users")

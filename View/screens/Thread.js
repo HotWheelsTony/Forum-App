@@ -22,6 +22,7 @@ export default function ThreadScreen(props) {
     const [loading, setLoading] = useState(true);
     const postId = props.route.params;
 
+    //refresh function for flatlist
     const onRefresh = () => {
         setLoading(true);
         getPosts().then(() => {
@@ -29,6 +30,7 @@ export default function ThreadScreen(props) {
         });
     }
 
+    //fetch replies of given thread to display
     const getPosts = async () => {
         try {
             const list = [];
@@ -68,32 +70,8 @@ export default function ThreadScreen(props) {
         });
     }, [postId]);
 
-
-    // const [post, setPost] = useState(null);
-
-    //
-    // const fetchPost = async () => {
-    //     await firestore()
-    //         .collection("posts")
-    //         .doc(postId)
-    //         .get()
-    //         .then(documentSnapshot => {
-    //             if (documentSnapshot.exists) {
-    //                 setPost(documentSnapshot.data());
-    //                 post.id = postId
-    //             }
-    //         }).catch((error) => {
-    //             console.log("Error fetching thread: " + error);
-    //         });
-    // }
-    //
-    // useEffect(() => {
-    //     fetchPost().then(() => {
-    //         console.log("Refreshed thread screen with new post id: " + postId);
-    //     });
-    // }, [postId]);
-
     return (postId !== null) && (op !== null) && (posts !== null) ? (
+        //display replies as flatlist if loaded
         <View style={styles.ThreadScreenContainer}>
             <ThreadHeader navigation={props.navigation}
                           item={posts[0]}
@@ -122,6 +100,7 @@ export default function ThreadScreen(props) {
 
         </View>
     ) : (
+        //display nothing if replies are not loaded
         <View style={styles.ThreadScreenContainer}>
             <EOFFooter option="replies"/>
         </View>

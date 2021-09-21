@@ -14,6 +14,9 @@ const styles = StyleSheet.create({
     },
 })
 
+/*
+Button for creating a new post from the browser screen
+ */
 export default function NewPostButton(props) {
     return (
         <TouchableOpacity activeOpacity={0.5}

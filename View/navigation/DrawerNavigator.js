@@ -70,6 +70,10 @@ export default function DrawerNavigator() {
     );
 }
 
+/*
+The following variable and two functions
+listen for live changes in the firestore
+ */
 let bookmarks = [];
 
 firestore()
@@ -100,6 +104,9 @@ function onError() {
     console.log("Error fetching bookmarks")
 }
 
+/*
+Custom content for the drawer, organizes the header and footer
+ */
 function CustomDrawerContent(props) {
     return (
         <View style={styles.DrawerContainer}>
@@ -121,6 +128,10 @@ function CustomDrawerContent(props) {
     );
 }
 
+
+/*
+Custom header for the drawer, displays current user info
+ */
 export function DrawerHeader(props) {
     return (
         <View>
@@ -148,6 +159,7 @@ export function DrawerHeader(props) {
     );
 }
 
+
 function BookmarkEntry({item}) {
     return (
         <Text style={styles.DrawerItem}>
@@ -156,6 +168,9 @@ function BookmarkEntry({item}) {
     );
 }
 
+/*
+Custom footer for the drawer, navigates to settings
+ */
 function DrawerFooter(props) {
     return (
         <View style={styles.DrawerFooter}>

@@ -1,6 +1,10 @@
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 
+/*
+Submit a post to the data base with
+the posters username
+ */
 export async function submitPost(content) {
     const date = new Date();
     await firestore()
@@ -18,6 +22,10 @@ export async function submitPost(content) {
         });
 }
 
+/*
+Adds the initial post as the first reply in the
+post's thread, this is used for displaying threads
+ */
 async function addOpReply(postId, content) {
     const date = new Date();
     await firestore()
@@ -37,6 +45,9 @@ async function addOpReply(postId, content) {
         });
 }
 
+/*
+Post a reply to the given post id
+ */
 export async function submitReply(postId, content) {
     const date = new Date();
     await firestore()
@@ -55,6 +66,10 @@ export async function submitReply(postId, content) {
         });
 }
 
+/*
+Utility function for getting the display timestamp
+for posts and replies
+ */
 function getDisplayTimestamp() {
     const date = new Date();
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",

@@ -13,6 +13,11 @@ const styles = StyleSheet.create({
     },
 });
 
+/*
+Custom header component to be used between screens
+props takes a string to display in the header
+and navigation for the back button
+ */
 export default function CustomHeader(props) {
     return (
         <Header

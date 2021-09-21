@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, FlatList} from "react-native";
-import ThreadBrowserHeader from "../shared/ThreadBrowserHeader";
+import BrowserHeader from "../shared/BrowserHeader";
 import NewPostButton from "../shared/NewPostButton";
 import Post from "../shared/Post";
 import EOFFooter from "../shared/EOFFooter";
 import firestore from "@react-native-firebase/firestore";
-import {GetPosts} from "../../Controller/Fetching";
 
 
 const styles = StyleSheet.create({
@@ -23,12 +22,10 @@ const styles = StyleSheet.create({
 export default function HomeScreen(props) {
     const [posts, setPosts] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [deleted, setDeleted] = useState(false);
 
-    // (async () => {
-    //     setPosts(await GetPosts());
-    // })()
-
+    /*
+    Refresh function for flat list
+     */
     const onRefresh = () => {
         setLoading(true);
         getPosts().then(() => {
@@ -36,6 +33,9 @@ export default function HomeScreen(props) {
         });
     }
 
+    /*
+    Fetch posts from firestore
+     */
     const getPosts = async () => {
         try {
             const list = [];
@@ -71,11 +71,16 @@ export default function HomeScreen(props) {
 
     useEffect(() => {
         getPosts().then(() => {});
-    }, []);
+    }, [posts]);
 
+
+    /*
+    Display fetched posts from firestore
+    as a flatlist
+     */
     return (
         <View style={styles.HomeScreenContainer}>
-            <ThreadBrowserHeader navigation={props.navigation}/>
+            <BrowserHeader navigation={props.navigation}/>
             <FlatList data={posts}
                       onRefresh={() => onRefresh()}
                       refreshing={loading}

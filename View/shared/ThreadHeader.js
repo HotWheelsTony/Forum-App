@@ -16,9 +16,15 @@ const styles = StyleSheet.create({
     },
 });
 
+/*
+Displays the screen header for the thread screen,
+which includes a back button, preview of the post content
+and bookmark option
+ */
 export default function ThreadHeader(props) {
     const [bookmarked, setBookmarked] = useState();
 
+    //check if this thread is bookmarked by the current user
     const checkBookmarks = async () => {
         await firestore()
             .collection("users")

@@ -2,15 +2,12 @@ import React, {useState} from 'react';
 import {View, StyleSheet, TouchableOpacity} from "react-native";
 import CustomHeader from "../shared/CustomHeader";
 import {Input} from "react-native-elements";
-import auth from "@react-native-firebase/auth";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import firestore from "@react-native-firebase/firestore";
 import {submitPost} from "../../Controller/Posting";
 
 const styles = StyleSheet.create({
     CreatePostScreenContainer: {
-        //justifyContent: 'center',
-        //alignItems: 'center',
+
     },
     InputContainer: {
         padding: 10,
@@ -24,8 +21,12 @@ const styles = StyleSheet.create({
 
 export default function CreatePostScreen(props) {
     const [content, setContent] = useState();
-    return (
 
+    /*
+    Create post screen, displays a simple text input field
+    for user to enter text, then submit
+     */
+    return (
         <View style={styles.CreatePostScreenContainer}>
             <CustomHeader title="Create Post" navigation={props.navigation}/>
             <View style={styles.InputContainer}>

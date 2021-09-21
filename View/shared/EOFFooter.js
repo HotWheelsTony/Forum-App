@@ -12,6 +12,10 @@ const styles = StyleSheet.create({
     },
 })
 
+/*
+Simple end of field footer for browser and
+thread screens
+ */
 export default function EOFFooter({option}) {
     return (
         <View style={styles.EOFContainer}>

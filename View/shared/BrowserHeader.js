@@ -1,9 +1,13 @@
 import React from "react";
-import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {TouchableOpacity, View} from "react-native";
 import {Header, Icon} from "react-native-elements";
 import CoursePicker from "../navigation/CoursePicker";
 
-export default function ThreadBrowserHeader(props) {
+
+/*
+Header for the browser screen
+ */
+export default function BrowserHeader(props) {
     return (
         <Header
             elevated={true}
@@ -11,21 +15,26 @@ export default function ThreadBrowserHeader(props) {
             backgroundColor="#e0e0e0"
             leftComponent={<LeftComponent navigation={props.navigation}/>}
             rightComponent={props.rightComponent}
-            //centerComponent={<CoursePicker/>}
         />
     );
 }
 
-
+/*
+Left component of the header which is
+a hamburger menu to open the drawer
+ */
 function LeftComponent(props) {
     return (
-        <View>
+        <View style={{
+            flexDirection: "row",
+        }}>
             <TouchableOpacity onPress={() => props.navigation.openDrawer()}>
                 <Icon name="menu"
                       size={30}
                       color="black"
                 />
             </TouchableOpacity>
+            <CoursePicker/>
         </View>
     );
 }

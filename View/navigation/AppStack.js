@@ -9,6 +9,10 @@ import CreatePostScreen from "../screens/CreatePost";
 
 const Stack = createStackNavigator();
 
+/*
+Main navigation stack once the user is
+authenticated
+ */
 export default function AppStack() {
     return (
         <Stack.Navigator screenOptions={{

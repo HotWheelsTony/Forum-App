@@ -51,13 +51,17 @@ const styles = StyleSheet.create({
     },
 })
 
-export default function RegisterScreen({navigation}) {
+export default function RegisterScreen() {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [username, setUsername] = useState();
     const [confirmPassword, setConfirmPassword] = useState();
     const {register} = useContext(AuthContext);
 
+    /*
+    Display register screen to allow users to sign up
+    with an email, username and password
+    */
     return (
         <View style={styles.RegisterScreenContainer}>
             <Text style={styles.Header}>

@@ -49,7 +49,10 @@ const styles = StyleSheet.create({
     },
 });
 
-
+/*
+Component for displaying a reply, props contains
+the post id of the post to be rendered and the post item
+ */
 export default function Reply(props) {
     return (
         <View style={styles.ReplyContainer}>
@@ -115,7 +118,8 @@ function ReplyHeader(props) {
     );
 }
 
-function ReplyOptions(props) {
+
+function ReplyOptions() {
     const [visible, setVisible] = useState(false);
     const hideMenu = () => setVisible(false);
     const showMenu = () => setVisible(true);
@@ -138,6 +142,10 @@ function ReplyOptions(props) {
     );
 }
 
+/*
+Component for displaying the header of the post,
+including poster name, timestamp, and number of replies
+ */
 function SeparatorDot() {
     return (
         <Icon

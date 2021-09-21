@@ -5,6 +5,9 @@ import RegisterScreen from "../screens/Register";
 
 const Stack = createStackNavigator();
 
+/*
+Sign in and register navigation stack
+ */
 export default function AuthStack() {
     return (
         <Stack.Navigator screenOptions={{

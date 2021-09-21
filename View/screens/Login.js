@@ -2,6 +2,7 @@ import React, {useContext, useState} from "react";
 import {View, Text, StyleSheet, TextInput, TouchableOpacity} from "react-native";
 import {AuthContext} from "../../Controller/Auth";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import DeviceInfo from "react-native-device-info/src/index";
 
 const styles = StyleSheet.create({
     SignInScreenContainer: {
@@ -84,12 +85,17 @@ export default function LoginScreen({navigation}) {
     const [password, setPassword] = useState("");
     const {login} = useContext(AuthContext);
 
+    /*
+    Display simple login screen, with email and password
+    text input fields, with login button and link to register
+     */
     return (
         <View style={styles.SignInScreenContainer}>
             <View style={styles.FormContainer}>
                 <Text style={styles.Header}>
                     Sign In
                 </Text>
+
                 <InputField value={email}
                             placeholder="Email"
                             onChangeText={(userEmail) => {
@@ -112,6 +118,7 @@ export default function LoginScreen({navigation}) {
                             secureTextEntry={true}
                 />
 
+                {/*Ensure all data is there before allowing user to log in*/}
                 <TouchableOpacity disabled={!email || !password}
                                   style={(!email || !password) ? styles.LoginButtonInActive : styles.LoginButtonActive}
                                   onPress={() => login(email, password)}>
@@ -122,7 +129,6 @@ export default function LoginScreen({navigation}) {
                                    size={30}
                                    color={(!email || !password) ? "rgba(0,0,0,0.5)" : "black"}
                     />
-
                 </TouchableOpacity>
 
             </View>
@@ -145,7 +151,10 @@ export default function LoginScreen({navigation}) {
     );
 }
 
-
+/*
+Input field to allow user to enter data,
+used for email and password input
+ */
 export function InputField({value, placeholder, icon, ...rest}) {
     return (
         <View style={styles.InputContainer}>
